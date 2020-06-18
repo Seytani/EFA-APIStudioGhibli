@@ -1,6 +1,6 @@
 const ghibliUrl = 'https://ghibliapi.herokuapp.com/films/';
-//const imdbUrl = '';
-// const imdbKey = 'k_YZc7a910';
+const imdbUrl = '';
+const imdbKey = 'k_YZc7a910';
 
 fetch(ghibliUrl)
     .then(res => res.json())
@@ -21,44 +21,45 @@ let pictures = {
     princessmononoke: "https://vignette.wikia.nocookie.net/studio-ghibli/images/c/c6/Princess_Mononoke.jpg/",
     myneighborstheyamadas: "https://vignette.wikia.nocookie.net/studio-ghibli/images/d/db/My_Neighbors_the_Yamadas.jpg/",
     spiritedaway: "https://vignette.wikia.nocookie.net/studio-ghibli/images/9/9e/Spirited_Away.png",
-    thecatretrurns: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Cat_Returns.jpg",
+    thecatreturns: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Cat_Returns.jpg",
     howlsmovingcastle: "https://vignette.wikia.nocookie.net/studio-ghibli/images/0/08/Howl's_Moving_Castle.jpg/",
     talesfromearthsea: "https://vignette.wikia.nocookie.net/studio-ghibli/images/0/09/%C3%96v%C3%A4rlden.jpg/",
     ponyo: "https://i.pinimg.com/originals/61/d9/cb/61d9cbbfbe1531c6acafedb168a7b384.jpg",
     arrietty: "https://www.mauvais-genres.com/21854/the-secret-world-of-arrietty-movie-poster-15x21-in-2010-studio-ghibli-hayao-miyazaki.jpg",
-    fromuponpoppyhill: "https://www.mauvais-genres.com/21854/the-secret-world-of-arrietty-movie-poster-15x21-in-2010-studio-ghibli-hayao-miyazaki.jpg",
+    fromuponpoppyhill: "https://vignette.wikia.nocookie.net/studio-ghibli/images/d/dd/From_Up_On_Poppy_Hill.jpg/",
     thewindrises: "https://vignette.wikia.nocookie.net/studio-ghibli/images/2/2d/The_Wind_Rises.jpg/",
     thetaleoftheprincesskaguya: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Tale_of_the_Princess_Kaguya.jpg/",
     whenmarniewasthere: "https://vignette.wikia.nocookie.net/studio-ghibli/images/7/7a/When_Marnie_Was_There.jpg",
 }
 
 function display(ghibli) {
-    let img = document.createElement('img');
-    let picMovieTitle = document.createElement('h5');
-    for (let movie in ghibli) {
-        let movieTitle = ghibli[movie].title;
+    for(let i = 0; i < ghibli.length; i++) {
+        let img = document.createElement('img');
+        img.setAttribute('class', 'd-block w-100');
+        let picMovieTitle = document.createElement('h3');
+        picMovieTitle.setAttribute('class', 'text-white bg-light rounded p-2 opacity-4');
+        let movieTitle = ghibli[i].title;
         img.alt = movieTitle;
         picMovieTitle.innerHTML = movieTitle;
         movieTitle = reformatTitle(movieTitle);
         img.src = getImage(movieTitle);
-        if (movie === 0) {
-            document.querySelector('.carousel-item active').appendChild(img);
-            document.querySelector('carousel-caption d-none d-md-block').appendChild(picMovieTitle);
+        if (i === 0) {
+            document.querySelector('.carousel-item.active').appendChild(img);
+            document.querySelector('.carousel-caption').appendChild(picMovieTitle);
         } else {
             let carouselItem = document.createElement('div');
             carouselItem.setAttribute('class', 'carousel-item');
             let carouselCaption = document.createElement('div');
-            carouselCaption.setAttribute('class', 'carousel-caption d-none d-md-block');
-            carouselItem.appendChild(img);
+            carouselCaption.setAttribute('class', 'carousel-caption');
             carouselCaption.appendChild(picMovieTitle);
+            carouselItem.appendChild(img);
             carouselItem.appendChild(carouselCaption);
             carousel.appendChild(carouselItem);
         }
     }
-    $('.carousel').carousel();
-    console.log($);
 }
 
+//Will match the movie title with picture url in pictures object
 function getImage(movie) {
     for (pic in pictures) {
         if (movie === pic) {
@@ -67,21 +68,10 @@ function getImage(movie) {
     }
 }
 
-
-// console.log('JS is working Jess');
-// for(pic in pictures) {
-//     let img = document.createElement('img');
-//     img.src = pictures[pic];
-//     console.log(pictures[pic]);
-//     grid.appendChild(img);
-// }
-
+//will process the title from the API and format it to be lower case and no special characters
 function reformatTitle(movieTitle) {
     let title = movieTitle.split(" ").join("");
     title = title.toLowerCase();
+    title = title.replace("'", "");
     return title;
 }
-
-// let ex = 'My Neighbor Totoro';
-// let reformatted = reformatTitle(ex);
-// console.log(reformatted);
