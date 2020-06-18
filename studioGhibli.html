@@ -18,7 +18,9 @@
     <!-- Mobile -->
     <div class="container p-2 d-md-none d-lg-none">
         <div id="top" class="d-flex p-3 justify-content-between">
-            <h3>Studio Ghibli Catalog</h3>
+            <a href="">
+                <h3 class="catalog">Studio Ghibli Catalog</h3>
+            </a>
             <button type="button" class="btn btn-primary" id="login">Login</button>
         </div>
         <div id="buttons" class="d-flex p-4 justify-content-between">
@@ -27,9 +29,14 @@
             <button type="button" id="watchlist" class="btn btn-primary">Watchlist</button>
         </div>
         <!-- GRID -->
-        <div id="container grid" class="p-3">
+        <div id="container grid" class="p-3"> <!-- remove -->
             <!-- Carousel -->
             <div id="carouselExampleControls" class="carousel slide" data-ride="false">
+                <!-- buttons mobile -->
+                <div class="control-buttons-mobile d-flex flex-column">
+                    <button type="button" id="watched-button" class="rounded-circle mobile-button"><i class="far fa-eye"></i></button>
+                    <button type="button" id="add-button" class="rounded-circle mobile-button"><i class="fas fa-plus"></i></button>
+                </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <!-- Add acitve element here -->
@@ -63,6 +70,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/ed470bb94d.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

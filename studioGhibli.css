@@ -2,6 +2,35 @@ img {
     border-radius: 15px;
 }
 
+.btn-primary {
+    background: palevioletred;
+    border-color: palevioletred;
+}
+
+/* Buttons for mobile */
+.control-buttons-mobile {
+    position: absolute;
+    top: 1em;
+    z-index: 1;
+}
+
+.mobile-button {
+    width: 3em;
+    height: 3em;
+    margin: 0.5em;
+    margin-left: 1em;
+    font-size: 1em;
+    border: none;
+    font-size: 1.2em;
+}
+
+#watched-button {
+    background: #6f75b9;
+}
+#add-button {
+    background: #aeec9a;
+}
+
 /* Opacity custom class Bootstrap-like (got it in the internet) */
 
 .opacity-0 {

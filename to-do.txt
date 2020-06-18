@@ -1,0 +1,27 @@
+done //make the header a link to the catalog (display main mobile)
+
+in progress // figure out buttons for watchlist mobile
+
+//write function for watched (toggle icon to watch/unwatched)
+
+//write function to add to watchlist 
+
+//write display for watched on mobile (list)
+
+//write display for toWatch on mobile (list)
+
+//write display for watchlist on mobile (list)
+
+//do all this for regular size
+
+
+
+
+
+
+*** ICONS ***
+eye - <i class="far fa-eye"></i>
+unwatch - <i class="far fa-eye-slash"></i>
+add - <i class="fas fa-plus"></i>
+remove - <i class="fas fa-minus"></i>
+

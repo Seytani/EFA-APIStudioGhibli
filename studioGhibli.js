@@ -8,6 +8,10 @@ fetch(ghibliUrl)
 
 let grid = document.querySelector('#grid');
 let carousel = document.querySelector('.carousel-inner');
+let catalog = document.querySelector('.catalog');
+let watchedButton = document.querySelector('.watched-button');
+let addButton =  document.querySelector('.add-button');
+
 
 let pictures = {
     kikisdeliveryservice: "https://vignette.wikia.nocookie.net/studio-ghibli/images/e/e3/Kiki's_Delivery_Service.jpg/",
@@ -31,6 +35,9 @@ let pictures = {
     thetaleoftheprincesskaguya: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Tale_of_the_Princess_Kaguya.jpg/",
     whenmarniewasthere: "https://vignette.wikia.nocookie.net/studio-ghibli/images/7/7a/When_Marnie_Was_There.jpg",
 }
+
+catalog.addEventListener('click', display);
+watchedButton.addEventListener('click', watched);
 
 function display(ghibli) {
     for(let i = 0; i < ghibli.length; i++) {
@@ -74,4 +81,9 @@ function reformatTitle(movieTitle) {
     title = title.toLowerCase();
     title = title.replace("'", "");
     return title;
+}
+
+function watched(e) {
+    watchedButton.style.backgroundColor = "#4f58b4";
+    
 }
