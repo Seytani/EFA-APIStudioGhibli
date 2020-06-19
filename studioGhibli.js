@@ -3,12 +3,13 @@ const imdbUrl = '';
 const imdbKey = 'k_YZc7a910';
 const myStorage = window.localStorage;
 let storedData;
+let currentMovie = 0;
 
 let grid = document.querySelector('#grid');
 let carousel = document.querySelector('.carousel-inner');
 let catalog = document.querySelector('.catalog');
 let watchedButton = document.querySelector('.watched-button');
-let addButton =  document.querySelector('.add-button');
+let addButton = document.querySelector('.add-button');
 
 
 let pictures = {
@@ -35,35 +36,38 @@ let pictures = {
 }
 
 catalog.addEventListener('click', display);
-watchedButton.addEventListener('click', watched);
+watchedButton.addEventListener('click', () => watched());
+$('#ghibliCarousel').on('slide.bs.carousel', function (target) {
+    currentMovie = target.to;
+})
 
-if(storedData) {
+if (storedData) {
     storedData = JSON.parse(myStorage.getItem(ghibli));
     display(storedData);
 } else {
     fetch(ghibliUrl)
-    .then(res => res.json())
-    .then(json => processData(json))
+        .then(res => res.json())
+        .then(json => processData(json))
 }
 
 function processData(data) {
-    for(let movie of data) {
+    for (let movie of data) {
         movie.watched = false;
         movie.inWatchList = false;
     }
     myStorage.setItem('ghibli', JSON.stringify(data));
-    display(data);    
+    display(data);
 }
 
 function display(ghibli) {
-    if(window.innerWidth < 786) {
+    if (window.innerWidth < 786) {
         displayMobile(ghibli);
     }
-    
+
 }
 
 function displayMobile(ghibli) {
-    for(let i = 0; i < ghibli.length; i++) {
+    for (let i = 0; i < ghibli.length; i++) {
         let img = document.createElement('img');
         img.setAttribute('class', 'd-block w-100');
         let picMovieTitle = document.createElement('h3');
@@ -106,8 +110,9 @@ function reformatTitle(movieTitle) {
     return title;
 }
 
+
 function watched(e) {
     watchedButton.style.backgroundColor = "#4f58b4";
-    console.log($('#ghibliCarousel'))
-    
+    storedData[currentMovie].watched = true;
+    myStorage.setItem('ghibli', JSON.stringify(storedData));
 }
