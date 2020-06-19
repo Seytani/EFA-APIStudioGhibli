@@ -6,12 +6,18 @@ img {
     background: palevioletred;
     border-color: palevioletred;
 }
+.carousel-control-prev {
+    z-index: 0;
+}
+.carousel-control-prev-icon {
+    z-index: 0;
+}
 
 /* Buttons for mobile */
 .control-buttons-mobile {
     position: absolute;
     top: 1em;
-    z-index: 1;
+    z-index: 10;
 }
 
 .mobile-button {

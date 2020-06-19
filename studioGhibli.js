@@ -1,10 +1,8 @@
 const ghibliUrl = 'https://ghibliapi.herokuapp.com/films/';
 const imdbUrl = '';
 const imdbKey = 'k_YZc7a910';
-
-fetch(ghibliUrl)
-    .then(res => res.json())
-    .then(json => display(json))
+const myStorage = window.localStorage;
+let storedData;
 
 let grid = document.querySelector('#grid');
 let carousel = document.querySelector('.carousel-inner');
@@ -39,7 +37,32 @@ let pictures = {
 catalog.addEventListener('click', display);
 watchedButton.addEventListener('click', watched);
 
+if(storedData) {
+    storedData = JSON.parse(myStorage.getItem(ghibli));
+    display(storedData);
+} else {
+    fetch(ghibliUrl)
+    .then(res => res.json())
+    .then(json => processData(json))
+}
+
+function processData(data) {
+    for(let movie of data) {
+        movie.watched = false;
+        movie.inWatchList = false;
+    }
+    myStorage.setItem('ghibli', JSON.stringify(data));
+    display(data);    
+}
+
 function display(ghibli) {
+    if(window.innerWidth < 786) {
+        displayMobile(ghibli);
+    }
+    
+}
+
+function displayMobile(ghibli) {
     for(let i = 0; i < ghibli.length; i++) {
         let img = document.createElement('img');
         img.setAttribute('class', 'd-block w-100');
@@ -85,5 +108,6 @@ function reformatTitle(movieTitle) {
 
 function watched(e) {
     watchedButton.style.backgroundColor = "#4f58b4";
+    console.log($('#ghibliCarousel'))
     
 }
