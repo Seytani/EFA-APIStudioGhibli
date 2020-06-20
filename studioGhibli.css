@@ -1,17 +1,22 @@
+body {
+    background-image: url('https://i.pinimg.com/originals/ce/50/ee/ce50ee36611b877ac88a2de36116d659.png');
+    font-family: 'Varela Round', sans-serif;
+}
+
+.catalog {
+    color: papayawhip;
+    background: rgb(107, 196, 34); 
+}
+
 img {
     border-radius: 15px;
 }
 
 .btn-primary {
-    background: palevioletred;
-    border-color: palevioletred;
+    background: rgb(180, 27, 78);
+    border-color: rgb(180, 27, 78);
 }
-.carousel-control-prev {
-    z-index: 0;
-}
-.carousel-control-prev-icon {
-    z-index: 0;
-}
+
 
 /* Buttons for mobile */
 .control-buttons-mobile {
@@ -26,15 +31,16 @@ img {
     margin: 0.5em;
     margin-left: 1em;
     font-size: 1em;
-    border: none;
+    border: black solid 2px;
     font-size: 1.2em;
 }
 
-#watched-button {
-    background: #6f75b9;
+.watched-button {
+    background: #7b4b94;
 }
-#add-button {
-    background: #aeec9a;
+
+.addToWatchList-button {
+    background: #D6F7A3;
 }
 
 /* Opacity custom class Bootstrap-like (got it in the internet) */
