@@ -1,6 +1,6 @@
 //Variables
 const ghibliUrl = 'https://ghibliapi.herokuapp.com/films/';
-const imdbUrl = '';
+const imdbUrl = 'https://imdb-api.com/en/API/';
 const imdbKey = 'k_YZc7a910';
 const myStorage = window.localStorage;
 let storedData;
@@ -13,8 +13,9 @@ let lists = document.querySelector('#lists');
 let carouselContainer = document.querySelector('#ghibliCarousel');
 let carousel = document.querySelector('.carousel-inner');
 let catalog = document.querySelector('.catalog');
-let watchedButton= document.querySelector('.watched-button');
+let watchedButton = document.querySelector('.watched-button');
 let inWatchListButton = document.querySelector('.addToWatchList-button');
+let modal = document.querySelector('.modal-body');
 //control buttons
 let watchedListButton = document.querySelector('#watched');
 let toWatchButton = document.querySelector('#to-watch');
@@ -45,6 +46,29 @@ let pictures = {
     thetaleoftheprincesskaguya: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Tale_of_the_Princess_Kaguya.jpg/",
     whenmarniewasthere: "https://vignette.wikia.nocookie.net/studio-ghibli/images/7/7a/When_Marnie_Was_There.jpg",
 }
+//Movie ids (for use with IMDB)
+let imdbId = {
+    kikisdeliveryservice: "tt0097814",
+    castleinthesky: "tt0092067",
+    graveofthefireflies: "tt0095327",
+    myneighbortotoro: "tt0347618",
+    onlyyesterday: "tt0102587",
+    porcorosso: "tt0104652",
+    pompoko: "tt0110008",
+    whisperoftheheart: "tt0113824",
+    princessmononoke: "tt0119698",
+    myneighborstheyamadas: "tt0206013",
+    spiritedaway: "tt0245429",
+    thecatreturns: "tt0347618",
+    howlsmovingcastle: "tt0347149",
+    talesfromearthsea: "tt0495596",
+    ponyo: "tt0876563",
+    arrietty: "tt1568921",
+    fromuponpoppyhill: "tt1798188",
+    thewindrises: "tt2013293",
+    thetaleoftheprincesskaguya: "tt2576852",
+    whenmarniewasthere: "tt3398268",
+}
 
 //Events
 catalog.addEventListener('click', display);
@@ -62,6 +86,10 @@ $('#ghibliCarousel').on('slide.bs.carousel', function (target) {
     currentMovie = target.to;
     updateButtons(currentMovie);
 }) //Specific to carousel from bootstrap. Returns index.
+$('#ghibliModal').on('shown.bs.modal', function () {
+    displayModal();
+    console.log('this is working');
+})
 
 //Local Storage Processing
 storedData = JSON.parse(myStorage.getItem('ghibli'));
@@ -77,6 +105,7 @@ function processData(data) {
     for (let movie of data) {
         movie.watched = false;
         movie.inWatchList = false;
+        movie.imdbId = getImdbId(movie);
     }
     storedData = data;
     myStorage.setItem('ghibli', JSON.stringify(data));
@@ -121,7 +150,69 @@ function displayMobile(ghibli) {
     }
 }
 
+function displayModal() {
+    if (modal.firstChild) {
+        modal.removeChild(modal.firstChild);
+    }
 
+    let imageUrl = '';
+    let trailerUrl = '';
+    let container = document.createElement('div');
+    let movieTitle = document.createElement('h3');
+    let releaseDateHeader = document.createElement('h4');
+    let directorHeader = document.createElement('h4');
+    let ratingHeader = document.createElement('h4');
+    let descriptionHeader = document.createElement('h4');
+    let imagesHeader = document.createElement('h4');
+    let trailerHeader = document.createElement('h4');
+    let releaseDate = document.createElement('p');
+    let director = document.createElement('p');
+    let rating = document.createElement('p');
+    let description = document.createElement('p');
+    let images;
+    let trailer = document.createElement('div');
+
+    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[currentMovie].imdbId + "/Short";
+    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[currentMovie].imdbId;
+    movieTitle.innerHTML = storedData[currentMovie].title;
+    movieTitle.setAttribute('class', 'text-center');
+    movieTitle.style.paddingBottom = '1em';
+    releaseDateHeader.innerHTML = "Release Date";
+    directorHeader.innerHTML = "Director";
+    ratingHeader.innerHTML = "Rating";
+    descriptionHeader.innerHTML = "Description";
+    imagesHeader.innerHTML = "Additional Images";
+    trailerHeader.innerHTML = "Trailer";
+    releaseDate.innerHTML = storedData[currentMovie].release_date;
+    director.innerHTML = storedData[currentMovie].director;
+    rating.innerHTML = storedData[currentMovie].rt_score;
+    description.innerHTML = storedData[currentMovie].description;
+
+    fetchStuff(imageUrl, trailerUrl);
+
+    async function fetchStuff(imagesUrl, trailerUrl) {
+        let resImg = await fetch(imageUrl);
+        let resTrailer = await fetch(trailerUrl);
+        let jsonImg = await resImg.json();
+        let jsonTrailer = await resTrailer.json();
+        container.appendChild(movieTitle);
+        container.appendChild(releaseDateHeader);
+        container.appendChild(releaseDate);
+        container.appendChild(directorHeader);
+        container.appendChild(director);
+        container.appendChild(ratingHeader);
+        container.appendChild(rating);
+        container.appendChild(descriptionHeader);
+        container.appendChild(description);
+        container.appendChild(imagesHeader);
+        container.appendChild(createCarousel(jsonImg));
+        container.appendChild(trailerHeader);
+        container.appendChild(createVideo(jsonTrailer));
+        modal.appendChild(container);
+    }
+
+
+}
 
 //creates a Bootstrap list group with movie property watched = true.
 function watchedList(e) {
@@ -129,12 +220,12 @@ function watchedList(e) {
     toggleCarousel(displayCarousel);
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
-    for(let movie of storedData) {
-        if(movie.watched) {
-        let listElement = document.createElement('a');
-        listElement.setAttribute('class', 'list-group-item list-group-item-action');
-        listElement.innerHTML = movie.title;
-        list.appendChild(listElement);
+    for (let movie of storedData) {
+        if (movie.watched) {
+            let listElement = document.createElement('a');
+            listElement.setAttribute('class', 'list-group-item list-group-item-action');
+            listElement.innerHTML = movie.title;
+            list.appendChild(listElement);
         }
     }
     lists.appendChild(list);
@@ -147,12 +238,12 @@ function toWatch(e) {
     toggleCarousel(displayCarousel);
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
-    for(let movie of storedData) {
-        if(!movie.watched) {
-        let listElement = document.createElement('a');
-        listElement.setAttribute('class', 'list-group-item list-group-item-action');
-        listElement.innerHTML = movie.title;
-        list.appendChild(listElement);
+    for (let movie of storedData) {
+        if (!movie.watched) {
+            let listElement = document.createElement('a');
+            listElement.setAttribute('class', 'list-group-item list-group-item-action');
+            listElement.innerHTML = movie.title;
+            list.appendChild(listElement);
         }
     }
     lists.appendChild(list);
@@ -164,12 +255,12 @@ function watchList(e) {
     toggleCarousel(displayCarousel);
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
-    for(let movie of storedData) {
-        if(movie.inWatchList) {
-        let listElement = document.createElement('a');
-        listElement.setAttribute('class', 'list-group-item list-group-item-action');
-        listElement.innerHTML = movie.title;
-        list.appendChild(listElement);
+    for (let movie of storedData) {
+        if (movie.inWatchList) {
+            let listElement = document.createElement('a');
+            listElement.setAttribute('class', 'list-group-item list-group-item-action');
+            listElement.innerHTML = movie.title;
+            list.appendChild(listElement);
         }
     }
     lists.appendChild(list);
@@ -178,9 +269,18 @@ function watchList(e) {
 
 //Matches the movie title with picture url in pictures object
 function getImage(movie) {
-    for (pic in pictures) {
-        if (movie === pic) {
+    for (let pic in pictures) {
+        if (pic === movie) {
             return pictures[pic];
+        }
+    }
+}
+
+function getImdbId(movie) {
+    let id = reformatTitle(movie.title);
+    for (let i in imdbId) {
+        if (i === id) {
+            return imdbId[i];
         }
     }
 }
@@ -193,24 +293,98 @@ function reformatTitle(movieTitle) {
     return title;
 }
 
+function createCarousel(result) {
+    let images = result.items;
+    let carousel = document.createElement('div');
+    carousel.setAttribute('id', 'imgCarousel');
+    carousel.setAttribute('class', 'carousel slide');
+    carousel.setAttribute('data-ride', 'carousel');
+    let carouselInner = document.createElement('div');
+    carouselInner.setAttribute('class', 'carousel-inner');
+
+    for (let i = 0; i < 5; i++) {
+        if (i === 0) {
+            let carouselActive = document.createElement('div');
+            carouselActive.setAttribute('class', 'carousel-item-active');
+            let item = document.createElement('img');
+            item.setAttribute('class', 'd-block w-100');
+            item.src = images[i].image;
+            item.alt = images[i].title;
+            carouselActive.appendChild(item);
+            carouselInner.appendChild(carouselActive);
+        } else {
+            let carouselItem = document.createElement('div');
+            carouselItem.setAttribute('class', 'carousel-item');
+            let item = document.createElement('img');
+            item.setAttribute('class', 'd-block w-100');
+            item.src = images[i].image;
+            item.alt = images[i].title;
+            carouselItem.appendChild(item);
+            carouselInner.appendChild(carouselItem);
+        }
+    }
+
+    let prevImg = document.createElement('a');
+    prevImg.setAttribute('class', 'carousel-control-prev');
+    prevImg.setAttribute('href', 'imgCarousel');
+    prevImg.setAttribute('role', 'button');
+    prevImg.setAttribute('data-slide', 'prev');
+    let spanPrev1 = document.createElement('span');
+    spanPrev1.setAttribute('class', 'carousel-control-prev-icon');
+    spanPrev1.setAttribute('aria-hidden', 'true');
+    let spanPrev2 = document.createElement('span');
+    spanPrev2.setAttribute('class', 'sr-only');
+    spanPrev2.innerHTML = "Previous";
+    prevImg.appendChild(spanPrev1);
+    prevImg.appendChild(spanPrev2);
+    
+    let nextImg = document.createElement('a');
+    nextImg.setAttribute('class', 'carousel-control-next');
+    nextImg.setAttribute('href', 'imgCarousel');
+    nextImg.setAttribute('role', 'button');
+    nextImg.setAttribute('data-slide', 'next');
+    let spanNext1 = document.createElement('span');
+    spanNext1.setAttribute('class', 'carousel-control-next-icon');
+    spanNext1.setAttribute('aria-hidden', 'true');
+    let spanNext2 = document.createElement('span');
+    spanNext2.setAttribute('class', 'sr-only');
+    spanNext2.innerHTML = "Next";
+    nextImg.appendChild(spanNext1);
+    nextImg.appendChild(spanNext2);
+
+    carousel.appendChild(carouselInner);
+    carousel.appendChild(prevImg);
+    carousel.appendChild(nextImg);
+
+    return carousel;
+}
+
+function createVideo(result) {
+    let video = document.createElement('iframe');
+    video.setAttribute('class', 'embed-responsive-item embed-responsive-16by9 w-100');
+    video.src = result.linkEmbed;
+    return video;
+
+}
+
 //Toggles display of Carousel
 function toggleCarousel(shouldDisplay) {
-    if(shouldDisplay) {
+    if (shouldDisplay) {
         carouselContainer.style.display = "none";
     } else {
         carouselContainer.style.display = "inline";
     }
 }
 
-function clearLists(){
-    if(lists.firstChild) {
+function clearLists() {
+    if (lists.firstChild) {
         lists.removeChild(lists.firstChild);
     }
 }
 
 //Makes sure the buttons display the correct toggles
 function updateButtons(movie) {
-    if(!storedData[currentMovie].watched) {
+    if (!storedData[currentMovie].watched) {
         watchedButton.style.backgroundColor = "#7b4b94";
         watchedButton.innerHTML = '<i class="far fa-eye"></i>';
     } else {
@@ -218,7 +392,7 @@ function updateButtons(movie) {
         watchedButton.innerHTML = '<i class="far fa-eye-slash"></i>';
     }
 
-    if(!storedData[currentMovie].inWatchList) {
+    if (!storedData[currentMovie].inWatchList) {
         inWatchListButton.style.backgroundColor = "#D6F7A3";
         inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
     } else {
@@ -229,7 +403,7 @@ function updateButtons(movie) {
 
 //Sets current object watched boolean. Toggles button.
 function watchedToggle(e) {
-    if(storedData[currentMovie].watched) {
+    if (storedData[currentMovie].watched) {
         watchedButton.style.backgroundColor = "#7b4b94";
         storedData[currentMovie].watched = false;
         watchedButton.innerHTML = '<i class="far fa-eye"></i>';
@@ -244,7 +418,7 @@ function watchedToggle(e) {
 
 //Sets current object in watch list boolean. Toggles button.
 function inWatchListToggle(e) {
-    if(storedData[currentMovie].inWatchList) {
+    if (storedData[currentMovie].inWatchList) {
         inWatchListButton.style.backgroundColor = "#D6F7A3";
         storedData[currentMovie].inWatchList = false;
         inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';

@@ -36,3 +36,5 @@ unwatch - <i class="far fa-eye-slash"></i>
 add - <i class="fas fa-plus"></i>
 remove - <i class="fas fa-minus"></i>
 
+*** Firebase URL ***
+https://jl-api-studioghibli.web.app

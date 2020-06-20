@@ -43,6 +43,10 @@ img {
     background: #D6F7A3;
 }
 
+.info-button {
+    background-color: #B7E3CC;
+}
+
 /* Opacity custom class Bootstrap-like (got it in the internet) */
 
 .opacity-0 {
