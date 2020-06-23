@@ -506,6 +506,12 @@ function createCarousel(result) {
 }
 
 function createVideo(result) {
+    if (result.errorMessage.length > 0) {
+        let errorMsg = document.createElement('div');
+        errorMsg.setAttribute('class', 'alert alert-danger');
+        errorMsg.innerHTML = 'Trailer not available';
+        return errorMsg;
+    }
     let video = document.createElement('iframe');
     video.setAttribute('class', 'embed-responsive-item embed-responsive-16by9 w-100');
     video.src = result.linkEmbed;
