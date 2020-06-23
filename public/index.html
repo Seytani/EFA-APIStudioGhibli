@@ -13,69 +13,68 @@
 
     <title>Studio Ghibli Watchlist</title>
 </head>
-
+<nav class="navbar navbar-dark bg-dark p-3">
+    <a id="catalog" class="navbar-brand" href="">Studio Ghibli Catalog</a>
+    <button type="button" class="btn btn-primary" id="login">Login</button>
+</nav>
 <body>
-    <!-- Mobile -->
-    <div class="container p-2 d-md-none d-lg-none">
-        <div id="top" class="d-flex p-3 justify-content-between">
-            <a href="">
-                <h3 class="catalog">Studio Ghibli Catalog</h3>
-            </a>
-            <button type="button" class="btn btn-primary" id="login">Login</button>
-        </div>
-        <div id="buttons" class="d-flex p-4 justify-content-between">
-            <button type="button" id="watched" class="btn btn-primary">Watched</button>
-            <button type="button" id="to-watch" class="btn btn-primary">To Watch</button>
-            <button type="button" id="watchlist" class="btn btn-primary">Watchlist</button>
-        </div>
-        <!-- GRID -->
-        <div id="container grid" class="p-3">
-            <!-- remove -->
-            <!-- Carousel -->
-            <div id="ghibliCarousel" class="carousel slide" data-ride="false">
-                <!-- buttons mobile will live here-->
-                <div class="control-buttons-mobile d-flex flex-column">
-                    <button class="rounded-circle mobile-button watched-button"><i class="far fa-eye"></i></button>
-                    <button class="rounded-circle mobile-button addToWatchList-button"><i
-                            class="fas fa-plus"></i></button>
-                    <button class="rounded-circle mobile-button info-button" data-toggle="modal"
-                        data-target="#ghibliModal"><i class="fas fa-info"></i></button>
+    <!-- GRID -->
+    <div id="grid" class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div id="buttons" class="d-flex p-4 justify-content-center">
+                    <button type="button" id="watched" class="btn btn-primary m-lg-5 m-1">Watched</button>
+                    <button type="button" id="to-watch" class="btn btn-primary m-lg-5 m-1">To Watch</button>
+                    <button type="button" id="watchlist" class="btn btn-primary m-lg-5 m-1">Watchlist</button>
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <!-- Add acitve element here -->
-                        <div class="carousel-caption">
-                        </div>
-                        <!-- content should be added HERE -->
-                    </div>
-                    <!-- keep adding more here -->
-                </div>
-                <a class="carousel-control-prev" href="#ghibliCarousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#ghibliCarousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
             </div>
-            <!-- Modal -->
-            <div class="modal fade" id="ghibliModal" tabindex="-1" role="dialog" aria-labelledby="ghibliModalTitle"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="ghibliModalLongTitle">Movie Info</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+        </div>
+    </div>
+    
+        <!-- Mobile -->
+        <!-- Carousel -->
+        <div id="ghibliCarousel" class="carousel slide" data-ride="false">
+            <!-- buttons mobile will live here-->
+            <div class="control-buttons-mobile d-flex flex-column">
+                <button class="rounded-circle mobile-button watched-button"><i class="far fa-eye"></i></button>
+                <button class="rounded-circle mobile-button addToWatchList-button"><i class="fas fa-plus"></i></button>
+                <button class="rounded-circle mobile-button info-button" data-toggle="modal"
+                    data-target="#ghibliModal"><i class="fas fa-info"></i></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <!-- Add acitve element here -->
+                    <div class="carousel-caption">
+                    </div>
+                    <!-- content should be added HERE -->
+                </div>
+                <!-- keep adding more here -->
+            </div>
+            <a class="carousel-control-prev" href="#ghibliCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#ghibliCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="ghibliModal" tabindex="-1" role="dialog" aria-labelledby="ghibliModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ghibliModalLongTitle">Movie Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -121,5 +120,4 @@
     <script src="https://kit.fontawesome.com/ed470bb94d.js" crossorigin="anonymous"></script>
     <script src="/public/studioGhibli.js"></script>
 </body>
-
 </html>

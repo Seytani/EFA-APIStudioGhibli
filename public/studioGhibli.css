@@ -1,15 +1,32 @@
 body {
-    background-image: url('https://i.pinimg.com/originals/ce/50/ee/ce50ee36611b877ac88a2de36116d659.png');
+    background-image: url('https://fsb.zobj.net/crop.php?r=XKKtSmcI7zDBdRwClw0SinCE_WU5yPhY8dzkoIZhz7Z7Ho1TUNIPOYWoWykzjsSq2HV_bFZePzlJ3Qbr1A72P6795UE3R-Wd_tsQ-NUgpCjwK7Ozh_AZ_btKeK0PZZ9QEXKRxUxKZMUBkw9P-I66J1Ojabtx3lkYpWZjzhLt6gRWX1B3SeIO37567k0PfDlEtvWv6XLA-RXAnghu');
     font-family: 'Varela Round', sans-serif;
 }
 
-.catalog {
+.navbar-brand {
     color: papayawhip;
-    background: rgb(107, 196, 34); 
+    font-size: 1.5em;
+}
+
+#ghibliCarousel {
+    padding: 1em;
 }
 
 img {
     border-radius: 15px;
+}
+
+#grid p {
+    font-size: 1.2em;
+    color: black;
+}
+
+#grid-element {
+    margin: 1em;
+    background-color: rgb(209, 206, 207);
+    padding: 1em;
+    border-radius: 15px;
+    border: rgb(3, 3, 3) solid 2px;
 }
 
 .btn-primary {
@@ -17,8 +34,8 @@ img {
     border-color: rgb(180, 27, 78);
 }
 
-
 /* Buttons for mobile */
+
 .control-buttons-mobile {
     position: absolute;
     top: 1em;
@@ -35,6 +52,15 @@ img {
     font-size: 1.2em;
 }
 
+.big-screen-button {
+    width: 2.5em;
+    height: 2.5em;
+    margin: 0.5em;
+    font-size: 1em;
+    border: black solid 2px;
+    font-size: 1em;
+}
+
 .watched-button {
     background: #7b4b94;
 }
@@ -45,6 +71,10 @@ img {
 
 .info-button {
     background-color: #B7E3CC;
+}
+
+.card {
+    height: 16em;
 }
 
 /* Opacity custom class Bootstrap-like (got it in the internet) */

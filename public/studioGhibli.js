@@ -12,10 +12,11 @@ let grid = document.querySelector('#grid');
 let lists = document.querySelector('#lists');
 let carouselContainer = document.querySelector('#ghibliCarousel');
 let carousel = document.querySelector('.carousel-inner');
-let catalog = document.querySelector('.catalog');
+let catalog = document.querySelector('#catalog');
+let modal = document.querySelector('.modal-body');
+//rounded buttons
 let watchedButton = document.querySelector('.watched-button');
 let inWatchListButton = document.querySelector('.addToWatchList-button');
-let modal = document.querySelector('.modal-body');
 //control buttons
 let watchedListButton = document.querySelector('#watched');
 let toWatchButton = document.querySelector('#to-watch');
@@ -81,14 +82,12 @@ watchedButton.addEventListener('click', watchedToggle);
 inWatchListButton.addEventListener('click', inWatchListToggle);
 
 
-
 $('#ghibliCarousel').on('slide.bs.carousel', function (target) {
     currentMovie = target.to;
     updateButtons(currentMovie);
 }) //Specific to carousel from bootstrap. Returns index.
 $('#ghibliModal').on('shown.bs.modal', function () {
     displayModal();
-    console.log('this is working');
 })
 
 //Local Storage Processing
@@ -113,14 +112,92 @@ function processData(data) {
 }
 
 
-//Display to specific screen size
+//Display to specific screen size on window load
 function display(ghibli) {
     if (window.innerWidth < 786) {
         displayMobile(ghibli);
+    } else {
+        displayBig(ghibli);
     }
 
 }
 
+
+//Display bigger screens
+function displayBig(ghibli) {
+    generateGrid(storedData);   
+}
+
+function generateGrid(movies) {
+    for (let r = 0; r <= 4; r++) {
+        let row = document.createElement('div');
+        row.setAttribute('class', 'row justify-content-md-center align-items-center');
+        for (let i = 1, c = r*5; i <= 5; i++, c++) {
+            let column = document.createElement('div');
+            column.setAttribute('class', 'col-md-4 col-lg-2');
+            column.appendChild(generateGridElement(movies[c], c));
+            row.appendChild(column);
+            if(i === 4) {
+            grid.appendChild(row);
+            }
+        }
+    }
+}
+
+function generateGridElement(movie, index) {
+    let container = document.createElement('div');
+    container.setAttribute('id', 'grid-element');
+    let titleDiv = document.createElement('div');
+    titleDiv.setAttribute('class', 'text-center');
+    let title = document.createElement('p');
+    let movieElements = document.createElement('div');
+    movieElements.setAttribute('class', 'd-flex flex-column align-items-center');
+    let img = document.createElement('img');
+    img.setAttribute('class', 'w-100')
+
+    title.innerHTML = movie.title;
+    img.src = getImage(reformatTitle(movie.title));
+
+    titleDiv.appendChild(title);
+    container.appendChild(titleDiv);
+    movieElements.appendChild(img);
+    movieElements.appendChild(generateButtons(index));
+    container.appendChild(movieElements);
+    return container;
+}
+
+//generates control buttons depending on screen size
+function generateButtons (index) {
+    let buttons = document.createElement('div');
+    buttons.setAttribute('class', 'd-flex align-items-center');
+    let watchedButton = document.createElement('button');
+    let addToWatchlistButton = document.createElement('button');
+    let infoButton = document.createElement('button');
+    
+    
+    watchedButton.innerHTML = '<i class="far fa-eye"></i>';
+    addToWatchlistButton.innerHTML = '<i class="fas fa-plus"></i>';
+    infoButton.innerHTML = '<i class="fas fa-info"></i>';
+    
+    watchedButton.setAttribute('class', 'rounded-circle big-screen-button watched-button');
+    watchedButton.setAttribute('data-index', index);
+    addToWatchlistButton.setAttribute('class', 'rounded-circle big-screen-button addToWatchList-button');
+    addToWatchlistButton.setAttribute('data-index', index);
+    infoButton.setAttribute('class', 'rounded-circle big-screen-button info-button');
+    infoButton.setAttribute('data-index', index);
+
+    buttons.style.zIndex = '10';
+
+    watchedButton.addEventListener('click', watchedToggle);
+    addToWatchlistButton.addEventListener('click', inWatchListToggle);
+    infoButton.addEventListener('click', displayModal);
+
+    buttons.appendChild(watchedButton);
+    buttons.appendChild(addToWatchlistButton);
+    buttons.appendChild(infoButton);
+        
+    return buttons;
+}
 //Display to Mobile
 function displayMobile(ghibli) {
     updateButtons(currentMovie);
@@ -170,7 +247,7 @@ function displayModal() {
     let rating = document.createElement('p');
     let description = document.createElement('p');
     let images;
-    let trailer = document.createElement('div');
+    let trailer = document.createElement('div'); //remove
 
     imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[currentMovie].imdbId + "/Short";
     trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[currentMovie].imdbId;
@@ -216,6 +293,7 @@ function displayModal() {
 
 //creates a Bootstrap list group with movie property watched = true.
 function watchedList(e) {
+    if (window.innerWidth < 786) {
     clearLists();
     toggleCarousel(displayCarousel);
     let list = document.createElement('div');
@@ -230,6 +308,9 @@ function watchedList(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
+} else {
+    //later;
+}
 }
 
 //creates a Bootstrap list group with movie property watched = false.
@@ -305,7 +386,7 @@ function createCarousel(result) {
     for (let i = 0; i < 5; i++) {
         if (i === 0) {
             let carouselActive = document.createElement('div');
-            carouselActive.setAttribute('class', 'carousel-item-active');
+            carouselActive.setAttribute('class', 'carousel-item active');
             let item = document.createElement('img');
             item.setAttribute('class', 'd-block w-100');
             item.src = images[i].image;
@@ -326,7 +407,7 @@ function createCarousel(result) {
 
     let prevImg = document.createElement('a');
     prevImg.setAttribute('class', 'carousel-control-prev');
-    prevImg.setAttribute('href', 'imgCarousel');
+    prevImg.setAttribute('href', '#imgCarousel');
     prevImg.setAttribute('role', 'button');
     prevImg.setAttribute('data-slide', 'prev');
     let spanPrev1 = document.createElement('span');
@@ -337,10 +418,10 @@ function createCarousel(result) {
     spanPrev2.innerHTML = "Previous";
     prevImg.appendChild(spanPrev1);
     prevImg.appendChild(spanPrev2);
-    
+
     let nextImg = document.createElement('a');
     nextImg.setAttribute('class', 'carousel-control-next');
-    nextImg.setAttribute('href', 'imgCarousel');
+    nextImg.setAttribute('href', '#imgCarousel');
     nextImg.setAttribute('role', 'button');
     nextImg.setAttribute('data-slide', 'next');
     let spanNext1 = document.createElement('span');
