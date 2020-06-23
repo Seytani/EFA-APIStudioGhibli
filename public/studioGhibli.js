@@ -185,12 +185,14 @@ function generateButtons (index) {
     addToWatchlistButton.setAttribute('data-index', index);
     infoButton.setAttribute('class', 'rounded-circle big-screen-button info-button');
     infoButton.setAttribute('data-index', index);
+    infoButton.setAttribute('data-toggle', 'modal');
+    infoButton.setAttribute('data-target', '#ghibliModal');
 
     buttons.style.zIndex = '10';
 
     watchedButton.addEventListener('click', watchedToggle);
     addToWatchlistButton.addEventListener('click', inWatchListToggle);
-    infoButton.addEventListener('click', displayModal);
+    infoButton.addEventListener('click', displayModalDesktop);
 
     buttons.appendChild(watchedButton);
     buttons.appendChild(addToWatchlistButton);
@@ -265,6 +267,68 @@ function displayModal() {
     director.innerHTML = storedData[currentMovie].director;
     rating.innerHTML = storedData[currentMovie].rt_score;
     description.innerHTML = storedData[currentMovie].description;
+
+    fetchStuff(imageUrl, trailerUrl);
+
+    async function fetchStuff(imagesUrl, trailerUrl) {
+        let resImg = await fetch(imageUrl);
+        let resTrailer = await fetch(trailerUrl);
+        let jsonImg = await resImg.json();
+        let jsonTrailer = await resTrailer.json();
+        container.appendChild(movieTitle);
+        container.appendChild(releaseDateHeader);
+        container.appendChild(releaseDate);
+        container.appendChild(directorHeader);
+        container.appendChild(director);
+        container.appendChild(ratingHeader);
+        container.appendChild(rating);
+        container.appendChild(descriptionHeader);
+        container.appendChild(description);
+        container.appendChild(imagesHeader);
+        container.appendChild(createCarousel(jsonImg));
+        container.appendChild(trailerHeader);
+        container.appendChild(createVideo(jsonTrailer));
+        modal.appendChild(container);
+    }
+
+
+}
+
+function displayModalDesktop(e) {
+    if (modal.firstChild) {
+        modal.removeChild(modal.firstChild);
+    }
+
+    let imageUrl = '';
+    let trailerUrl = '';
+    let container = document.createElement('div');
+    let movieTitle = document.createElement('h3');
+    let releaseDateHeader = document.createElement('h4');
+    let directorHeader = document.createElement('h4');
+    let ratingHeader = document.createElement('h4');
+    let descriptionHeader = document.createElement('h4');
+    let imagesHeader = document.createElement('h4');
+    let trailerHeader = document.createElement('h4');
+    let releaseDate = document.createElement('p');
+    let director = document.createElement('p');
+    let rating = document.createElement('p');
+    let description = document.createElement('p');
+
+    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[e.target.dataset.index].imdbId + "/Short";
+    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[e.target.dataset.index].imdbId;
+    movieTitle.innerHTML = storedData[e.target.dataset.index].title;
+    movieTitle.setAttribute('class', 'text-center');
+    movieTitle.style.paddingBottom = '1em';
+    releaseDateHeader.innerHTML = "Release Date";
+    directorHeader.innerHTML = "Director";
+    ratingHeader.innerHTML = "Rating";
+    descriptionHeader.innerHTML = "Description";
+    imagesHeader.innerHTML = "Additional Images";
+    trailerHeader.innerHTML = "Trailer";
+    releaseDate.innerHTML = storedData[e.target.dataset.index].release_date;
+    director.innerHTML = storedData[e.target.dataset.index].director;
+    rating.innerHTML = storedData[e.target.dataset.index].rt_score;
+    description.innerHTML = storedData[e.target.dataset.index].description;
 
     fetchStuff(imageUrl, trailerUrl);
 
