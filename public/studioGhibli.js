@@ -314,9 +314,9 @@ function displayModalDesktop(e) {
     let rating = document.createElement('p');
     let description = document.createElement('p');
 
-    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[e.target.dataset.index].imdbId + "/Short";
-    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[e.target.dataset.index].imdbId;
-    movieTitle.innerHTML = storedData[e.target.dataset.index].title;
+    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId + "/Short";
+    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId;
+    movieTitle.innerHTML = storedData[e.currentTarget.dataset.index].title;
     movieTitle.setAttribute('class', 'text-center');
     movieTitle.style.paddingBottom = '1em';
     releaseDateHeader.innerHTML = "Release Date";
@@ -325,10 +325,10 @@ function displayModalDesktop(e) {
     descriptionHeader.innerHTML = "Description";
     imagesHeader.innerHTML = "Additional Images";
     trailerHeader.innerHTML = "Trailer";
-    releaseDate.innerHTML = storedData[e.target.dataset.index].release_date;
-    director.innerHTML = storedData[e.target.dataset.index].director;
-    rating.innerHTML = storedData[e.target.dataset.index].rt_score;
-    description.innerHTML = storedData[e.target.dataset.index].description;
+    releaseDate.innerHTML = storedData[e.currentTarget.dataset.index].release_date;
+    director.innerHTML = storedData[e.currentTarget.dataset.index].director;
+    rating.innerHTML = storedData[e.currentTarget.dataset.index].rt_score;
+    description.innerHTML = storedData[e.currentTarget.dataset.index].description;
 
     fetchStuff(imageUrl, trailerUrl);
 
@@ -551,26 +551,26 @@ function updateButtons(movie) {
 function watchedToggle(e) {
     if(window.innerWidth < 786 ) {
         if (storedData[currentMovie].watched) {
-            e.target.style.backgroundColor = "#7b4b94";
+            e.currentTarget.style.backgroundColor = "#7b4b94";
             storedData[currentMovie].watched = false;
-            e.target.innerHTML = '<i class="far fa-eye"></i>';
+            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
             myStorage.setItem('ghibli', JSON.stringify(storedData));
         } else {
-            e.target.style.backgroundColor = "#7d82b8";
+            e.currentTarget.style.backgroundColor = "#7d82b8";
             storedData[currentMovie].watched = true;
-            e.target.innerHTML = '<i class="far fa-eye-slash"></i>';
+            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
             myStorage.setItem('ghibli', JSON.stringify(storedData));
         }
     } else {
-    if (storedData[e.target.dataset.index].watched) {
-        e.target.style.backgroundColor = "#7b4b94";
-        storedData[e.target.dataset.index].watched = false;
-        e.target.innerHTML = '<i class="far fa-eye"></i>';
+    if (storedData[e.currentTarget.dataset.index].watched) {
+        e.currentTarget.style.backgroundColor = "#7b4b94";
+        storedData[e.currentTarget.dataset.index].watched = false;
+        e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
         myStorage.setItem('ghibli', JSON.stringify(storedData));
     } else {
-        e.target.style.backgroundColor = "#7d82b8";
-        storedData[e.target.dataset.index].watched = true;
-        e.target.innerHTML = '<i class="far fa-eye-slash"></i>';
+        e.currentTarget.style.backgroundColor = "#7d82b8";
+        storedData[e.currentTarget.dataset.index].watched = true;
+        e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
         myStorage.setItem('ghibli', JSON.stringify(storedData));
     }
 }
@@ -591,15 +591,15 @@ function inWatchListToggle(e) {
         myStorage.setItem('ghibli', JSON.stringify(storedData));
     }
 } else {
-    if (storedData[e.target.dataset.index].inWatchList) {
-        e.target.style.backgroundColor = "#D6F7A3";
-        storedData[e.target.dataset.index].inWatchList = false;
-        e.target.innerHTML = '<i class="fas fa-plus"></i>';
+    if (storedData[e.currentTarget.dataset.index].inWatchList) {
+        e.currentTarget.style.backgroundColor = "#D6F7A3";
+        storedData[e.currentTarget.dataset.index].inWatchList = false;
+        e.currentTarget.innerHTML = '<i class="fas fa-plus"></i>';
         myStorage.setItem('ghibli', JSON.stringify(storedData));
     } else {
-        e.target.style.backgroundColor = "#bd2f55";
-        storedData[e.target.dataset.index].inWatchList = true;
-        e.target.innerHTML = '<i class="fas fa-minus"></i>';
+        e.currentTarget.style.backgroundColor = "#bd2f55";
+        storedData[e.currentTarget.dataset.index].inWatchList = true;
+        e.currentTarget.innerHTML = '<i class="fas fa-minus"></i>';
         myStorage.setItem('ghibli', JSON.stringify(storedData));
     }
 }
