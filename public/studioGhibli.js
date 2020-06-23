@@ -1,7 +1,7 @@
 //Variables
 const ghibliUrl = 'https://ghibliapi.herokuapp.com/films/';
 const imdbUrl = 'https://imdb-api.com/en/API/';
-const imdbKey = 'k_YZc7a910';
+const imdbKey = 'k_h1Rm5U5D';
 const myStorage = window.localStorage;
 let storedData;
 let displayCarousel = true;
@@ -87,7 +87,9 @@ $('#ghibliCarousel').on('slide.bs.carousel', function (target) {
     updateButtons(currentMovie);
 }) //Specific to carousel from bootstrap. Returns index.
 $('#ghibliModal').on('shown.bs.modal', function () {
-    displayModal();
+    if (window.innerWidth < 786) {
+        displayModal();
+    }
 })
 
 //Local Storage Processing
@@ -125,20 +127,20 @@ function display(ghibli) {
 
 //Display bigger screens
 function displayBig(ghibli) {
-    generateGrid(storedData);   
+    generateGrid(storedData);
 }
 
 function generateGrid(movies) {
     for (let r = 0; r <= 4; r++) {
         let row = document.createElement('div');
         row.setAttribute('class', 'row justify-content-md-center align-items-center');
-        for (let i = 1, c = r*5; i <= 5; i++, c++) {
+        for (let i = 1, c = r * 5; i <= 5; i++, c++) {
             let column = document.createElement('div');
             column.setAttribute('class', 'col-md-4 col-lg-2');
             column.appendChild(generateGridElement(movies[c], c));
             row.appendChild(column);
-            if(i === 4) {
-            grid.appendChild(row);
+            if (i === 4) {
+                grid.appendChild(row);
             }
         }
     }
@@ -167,18 +169,18 @@ function generateGridElement(movie, index) {
 }
 
 //generates control buttons depending on screen size
-function generateButtons (index) {
+function generateButtons(index) {
     let buttons = document.createElement('div');
     buttons.setAttribute('class', 'd-flex align-items-center');
     let watchedButton = document.createElement('button');
     let addToWatchlistButton = document.createElement('button');
     let infoButton = document.createElement('button');
-    
-    
+
+
     watchedButton.innerHTML = '<i class="far fa-eye"></i>';
     addToWatchlistButton.innerHTML = '<i class="fas fa-plus"></i>';
     infoButton.innerHTML = '<i class="fas fa-info"></i>';
-    
+
     watchedButton.setAttribute('class', 'rounded-circle big-screen-button watched-button');
     watchedButton.setAttribute('data-index', index);
     addToWatchlistButton.setAttribute('class', 'rounded-circle big-screen-button addToWatchList-button');
@@ -197,7 +199,7 @@ function generateButtons (index) {
     buttons.appendChild(watchedButton);
     buttons.appendChild(addToWatchlistButton);
     buttons.appendChild(infoButton);
-        
+
     return buttons;
 }
 
@@ -249,8 +251,6 @@ function displayModal() {
     let director = document.createElement('p');
     let rating = document.createElement('p');
     let description = document.createElement('p');
-    let images;
-    let trailer = document.createElement('div'); //remove
 
     imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[currentMovie].imdbId + "/Short";
     trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[currentMovie].imdbId;
@@ -359,23 +359,23 @@ function displayModalDesktop(e) {
 //creates a Bootstrap list group with movie property watched = true.
 function watchedList(e) {
     if (window.innerWidth < 786) {
-    clearLists();
-    toggleCarousel(displayCarousel);
-    let list = document.createElement('div');
-    list.setAttribute('class', 'list-group w-100');
-    for (let movie of storedData) {
-        if (movie.watched) {
-            let listElement = document.createElement('a');
-            listElement.setAttribute('class', 'list-group-item list-group-item-action');
-            listElement.innerHTML = movie.title;
-            list.appendChild(listElement);
+        clearLists();
+        toggleCarousel(displayCarousel);
+        let list = document.createElement('div');
+        list.setAttribute('class', 'list-group w-100');
+        for (let movie of storedData) {
+            if (movie.watched) {
+                let listElement = document.createElement('a');
+                listElement.setAttribute('class', 'list-group-item list-group-item-action');
+                listElement.innerHTML = movie.title;
+                list.appendChild(listElement);
+            }
         }
+        lists.appendChild(list);
+        lists.style.display = "flex";
+    } else {
+        //later;
     }
-    lists.appendChild(list);
-    lists.style.display = "flex";
-} else {
-    //later;
-}
 }
 
 //creates a Bootstrap list group with movie property watched = false.
@@ -549,7 +549,7 @@ function updateButtons(movie) {
 
 //Sets current object watched boolean. Toggles button.
 function watchedToggle(e) {
-    if(window.innerWidth < 786 ) {
+    if (window.innerWidth < 786) {
         if (storedData[currentMovie].watched) {
             e.currentTarget.style.backgroundColor = "#7b4b94";
             storedData[currentMovie].watched = false;
@@ -562,45 +562,45 @@ function watchedToggle(e) {
             myStorage.setItem('ghibli', JSON.stringify(storedData));
         }
     } else {
-    if (storedData[e.currentTarget.dataset.index].watched) {
-        e.currentTarget.style.backgroundColor = "#7b4b94";
-        storedData[e.currentTarget.dataset.index].watched = false;
-        e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
-    } else {
-        e.currentTarget.style.backgroundColor = "#7d82b8";
-        storedData[e.currentTarget.dataset.index].watched = true;
-        e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
+        if (storedData[e.currentTarget.dataset.index].watched) {
+            e.currentTarget.style.backgroundColor = "#7b4b94";
+            storedData[e.currentTarget.dataset.index].watched = false;
+            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            e.currentTarget.style.backgroundColor = "#7d82b8";
+            storedData[e.currentTarget.dataset.index].watched = true;
+            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
     }
-}
 }
 
 //Sets current object in watch list boolean. Toggles button.
 function inWatchListToggle(e) {
-    if(window.innerWidth < 786 ) {
-    if (storedData[currentMovie].inWatchList) {
-        inWatchListButton.style.backgroundColor = "#D6F7A3";
-        storedData[currentMovie].inWatchList = false;
-        inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
+    if (window.innerWidth < 786) {
+        if (storedData[currentMovie].inWatchList) {
+            inWatchListButton.style.backgroundColor = "#D6F7A3";
+            storedData[currentMovie].inWatchList = false;
+            inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            inWatchListButton.style.backgroundColor = "#bd2f55";
+            storedData[currentMovie].inWatchList = true;
+            inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
     } else {
-        inWatchListButton.style.backgroundColor = "#bd2f55";
-        storedData[currentMovie].inWatchList = true;
-        inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
+        if (storedData[e.currentTarget.dataset.index].inWatchList) {
+            e.currentTarget.style.backgroundColor = "#D6F7A3";
+            storedData[e.currentTarget.dataset.index].inWatchList = false;
+            e.currentTarget.innerHTML = '<i class="fas fa-plus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            e.currentTarget.style.backgroundColor = "#bd2f55";
+            storedData[e.currentTarget.dataset.index].inWatchList = true;
+            e.currentTarget.innerHTML = '<i class="fas fa-minus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
     }
-} else {
-    if (storedData[e.currentTarget.dataset.index].inWatchList) {
-        e.currentTarget.style.backgroundColor = "#D6F7A3";
-        storedData[e.currentTarget.dataset.index].inWatchList = false;
-        e.currentTarget.innerHTML = '<i class="fas fa-plus"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
-    } else {
-        e.currentTarget.style.backgroundColor = "#bd2f55";
-        storedData[e.currentTarget.dataset.index].inWatchList = true;
-        e.currentTarget.innerHTML = '<i class="fas fa-minus"></i>';
-        myStorage.setItem('ghibli', JSON.stringify(storedData));
-    }
-}
 }
