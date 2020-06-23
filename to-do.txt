@@ -1,34 +1,5 @@
 *** TO-DO ***
-//mobile modal
-
-//do all this for regular size
-
-//remove unsused classes
-
-//comment functionalities
-
-
-
-
-*** DONE ***
-
-done //make the header a link to the catalog (display main mobile)
-
-done // figure out buttons for watchlist mobile
-
-done //figure out a way to make buttons change per index
-
-done //make data ride for carousel stick to false
-
-done //write function for watched (toggle icon to watch/unwatched)
-
-done //write function to add to watchlist 
-
-done //write display for watched on mobile (list)
-
-done //write display for toWatch on mobile (list)
-
-done //write display for watchlist on mobile (list)
+//
 
 *** ICONS ***
 eye - <i class="far fa-eye"></i>
@@ -38,3 +9,7 @@ remove - <i class="fas fa-minus"></i>
 
 *** Firebase URL ***
 https://jl-api-studioghibli.web.app
+
+*** IMDB Keys ***
+k_PK104sOs
+k_h1Rm5U5D

@@ -358,7 +358,6 @@ function displayModalDesktop(e) {
 
 //creates a Bootstrap list group with movie property watched = true.
 function watchedList(e) {
-    if (window.innerWidth < 786) {
         clearLists();
         toggleCarousel(displayCarousel);
         let list = document.createElement('div');
@@ -373,9 +372,7 @@ function watchedList(e) {
         }
         lists.appendChild(list);
         lists.style.display = "flex";
-    } else {
-        //later;
-    }
+
 }
 
 //creates a Bootstrap list group with movie property watched = false.
