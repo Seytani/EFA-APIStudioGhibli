@@ -1,5 +1,13 @@
 *** TO-DO ***
-//
+done //cambiar el focus de los botones
+done //copiar funcionalidad de botones
+done //hacer q se hagan update los botones de la pelicula
+done //quitar el login
+
+//arreglar que dos botones puedan estar activos en griddisplay
+
+//write paragraph about me
+//add pdf resume
 
 *** ICONS ***
 eye - <i class="far fa-eye"></i>

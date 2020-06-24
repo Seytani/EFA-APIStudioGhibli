@@ -5,6 +5,7 @@ const imdbKey = 'k_h1Rm5U5D';
 const myStorage = window.localStorage;
 let storedData;
 let displayCarousel = true;
+let displayGrid = true;
 let currentMovie = 0;
 
 //DOM
@@ -21,8 +22,6 @@ let inWatchListButton = document.querySelector('.addToWatchList-button');
 let watchedListButton = document.querySelector('#watched');
 let toWatchButton = document.querySelector('#to-watch');
 let watchListButton = document.querySelector('#watchlist');
-
-
 
 //Pics
 let pictures = {
@@ -47,6 +46,7 @@ let pictures = {
     thetaleoftheprincesskaguya: "https://vignette.wikia.nocookie.net/studio-ghibli/images/8/87/The_Tale_of_the_Princess_Kaguya.jpg/",
     whenmarniewasthere: "https://vignette.wikia.nocookie.net/studio-ghibli/images/7/7a/When_Marnie_Was_There.jpg",
 }
+
 //Movie ids (for use with IMDB)
 let imdbId = {
     kikisdeliveryservice: "tt0097814",
@@ -81,12 +81,12 @@ watchListButton.addEventListener('click', watchList);
 watchedButton.addEventListener('click', watchedToggle);
 inWatchListButton.addEventListener('click', inWatchListToggle);
 
-
-$('#ghibliCarousel').on('slide.bs.carousel', function (target) {
-    currentMovie = target.to;
+//Events fired by bootstrap
+$('#ghibliCarousel').on('slide.bs.carousel', function (target) { //carousel
+    currentMovie = target.to; 
     updateButtons(currentMovie);
-}) //Specific to carousel from bootstrap. Returns index.
-$('#ghibliModal').on('shown.bs.modal', function () {
+}) 
+$('#ghibliModal').on('shown.bs.modal', function () { //modal
     if (window.innerWidth < 786) {
         displayModal();
     }
@@ -175,10 +175,23 @@ function generateButtons(index) {
     let watchedButton = document.createElement('button');
     let addToWatchlistButton = document.createElement('button');
     let infoButton = document.createElement('button');
+    
+    if(!storedData[index].watched) {
+        watchedButton.innerHTML = '<i class="far fa-eye"></i>';
+        watchedButton.style.backgroundColor = "#7b4b94";
+    } else {
+        watchedButton.innerHTML = '<i class="far fa-eye-slash"></i>';
+        watchedButton.style.backgroundColor = "#7d82b8";
+    }
 
+    if (!storedData[index].inWatchList) {
+        addToWatchlistButton.style.backgroundColor = "#D6F7A3";
+        addToWatchlistButton.innerHTML = '<i class="fas fa-plus"></i>';
+    } else {
+        addToWatchlistButton.style.backgroundColor = "#bd2f55";
+        addToWatchlistButton.innerHTML = '<i class="fas fa-minus"></i>';
+    }
 
-    watchedButton.innerHTML = '<i class="far fa-eye"></i>';
-    addToWatchlistButton.innerHTML = '<i class="fas fa-plus"></i>';
     infoButton.innerHTML = '<i class="fas fa-info"></i>';
 
     watchedButton.setAttribute('class', 'rounded-circle big-screen-button watched-button');
@@ -232,6 +245,7 @@ function displayMobile(ghibli) {
     }
 }
 
+//add content to modal mobile version
 function displayModal() {
     if (modal.firstChild) {
         modal.removeChild(modal.firstChild);
@@ -294,6 +308,7 @@ function displayModal() {
 
 }
 
+//add content to modal desktop
 function displayModalDesktop(e) {
     if (modal.firstChild) {
         modal.removeChild(modal.firstChild);
@@ -358,21 +373,24 @@ function displayModalDesktop(e) {
 
 //creates a Bootstrap list group with movie property watched = true.
 function watchedList(e) {
-        clearLists();
-        toggleCarousel(displayCarousel);
-        let list = document.createElement('div');
-        list.setAttribute('class', 'list-group w-100');
-        for (let movie of storedData) {
-            if (movie.watched) {
-                let listElement = document.createElement('a');
-                listElement.setAttribute('class', 'list-group-item list-group-item-action');
-                listElement.innerHTML = movie.title;
-                list.appendChild(listElement);
-            }
+    clearLists();
+    let list = document.createElement('div');
+    list.setAttribute('class', 'list-group w-100');
+    for (let movie of storedData) {
+        if (movie.watched) {
+            let listElement = document.createElement('a');
+            listElement.setAttribute('class', 'list-group-item list-group-item-action');
+            listElement.innerHTML = movie.title;
+            list.appendChild(listElement);
         }
-        lists.appendChild(list);
-        lists.style.display = "flex";
-
+    }
+    lists.appendChild(list);
+    lists.style.display = "flex";
+    if (document.innerWidth < 786) {
+        toggleCarousel(displayCarousel);
+    } else {
+            toggleGrid(e);
+    }
 }
 
 //creates a Bootstrap list group with movie property watched = false.
@@ -391,6 +409,11 @@ function toWatch(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
+    if (document.innerWidth < 786) {
+        toggleCarousel(displayCarousel);
+    } else {
+            toggleGrid(e);
+    }
 }
 // creates a Bootstrap list group with movie property inWatchList = true.
 function watchList(e) {
@@ -408,6 +431,25 @@ function watchList(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
+    if (document.innerWidth < 786) {
+        toggleCarousel(displayCarousel);
+    } else {
+            toggleGrid(e);
+    }
+}
+
+//toggles grid visibility
+function toggleGrid(e) {
+    if (displayGrid) {
+        grid.style.display = 'none';
+        displayGrid = false;
+        e.target.style.backgroundColor = "teal";
+    } else {
+        grid.style.display = 'block';
+        displayGrid = true;
+        e.target.style.backgroundColor = "rgb(180, 27, 78)";
+        clearLists();
+    }
 }
 
 //Matches the movie title with picture url in pictures object
@@ -419,6 +461,7 @@ function getImage(movie) {
     }
 }
 
+//get IMDB id to use with api
 function getImdbId(movie) {
     let id = reformatTitle(movie.title);
     for (let i in imdbId) {
@@ -436,6 +479,7 @@ function reformatTitle(movieTitle) {
     return title;
 }
 
+//creates a bootstrap carousel with data given
 function createCarousel(result) {
     let images = result.items;
     let carousel = document.createElement('div');
@@ -502,6 +546,7 @@ function createCarousel(result) {
     return carousel;
 }
 
+//
 function createVideo(result) {
     if (result.errorMessage.length > 0) {
         let errorMsg = document.createElement('div');
@@ -513,7 +558,6 @@ function createVideo(result) {
     video.setAttribute('class', 'embed-responsive-item embed-responsive-16by9 w-100');
     video.src = result.linkEmbed;
     return video;
-
 }
 
 //Toggles display of Carousel

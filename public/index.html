@@ -15,7 +15,6 @@
 </head>
 <nav class="navbar navbar-dark bg-dark p-3">
     <a id="catalog" class="navbar-brand" href="">Studio Ghibli Catalog</a>
-    <button type="button" class="btn btn-primary" id="login">Login</button>
 </nav>
 <body>
     <!-- GRID -->
@@ -23,9 +22,9 @@
     <div class="row">
         <div class="col">
             <div id="buttons" class="d-flex p-4 justify-content-center">
-                <button type="button" id="watched" class="btn btn-primary m-lg-5 m-1">Watched</button>
-                <button type="button" id="to-watch" class="btn btn-primary m-lg-5 m-1">To Watch</button>
-                <button type="button" id="watchlist" class="btn btn-primary m-lg-5 m-1">Watchlist</button>
+                <button type="button" id="watched" class="btn btn-primary m-lg-5 m-1 main-button">Watched</button>
+                <button type="button" id="to-watch" class="btn btn-primary m-lg-5 m-1 main-button">To Watch</button>
+                <button type="button" id="watchlist" class="btn btn-primary m-lg-5 m-1 main-button">Watchlist</button>
             </div>
         </div>
     </div>
@@ -37,7 +36,7 @@
         <!-- Carousel -->
         <div id="ghibliCarousel" class="carousel slide" data-ride="false">
             <!-- buttons mobile will live here-->
-            <div class="control-buttons-mobile d-flex flex-column">
+            <div class="control-buttons-mobile d-flex flex-column d-md-none">
                 <button class="rounded-circle mobile-button watched-button"><i class="far fa-eye"></i></button>
                 <button class="rounded-circle mobile-button addToWatchList-button"><i class="fas fa-plus"></i></button>
                 <button class="rounded-circle mobile-button info-button" data-toggle="modal"
