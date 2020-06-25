@@ -6,6 +6,7 @@ const myStorage = window.localStorage;
 let storedData;
 let displayCarousel = true;
 let displayGrid = true;
+let currentDisplay = '';
 let currentMovie = 0;
 
 //DOM
@@ -135,6 +136,9 @@ function generateGrid(movies) {
         let row = document.createElement('div');
         row.setAttribute('class', 'row justify-content-md-center align-items-center');
         for (let i = 1, c = r * 5; i <= 5; i++, c++) {
+            if (c === 20) {
+                break;
+            }
             let column = document.createElement('div');
             column.setAttribute('class', 'col-md-4 col-lg-2');
             column.appendChild(generateGridElement(movies[c], c));
@@ -156,7 +160,7 @@ function generateGridElement(movie, index) {
     movieElements.setAttribute('class', 'd-flex flex-column align-items-center');
     let img = document.createElement('img');
     img.setAttribute('class', 'w-100')
-
+    
     title.innerHTML = movie.title;
     img.src = getImage(reformatTitle(movie.title));
 
@@ -372,7 +376,33 @@ function displayModalDesktop(e) {
 }
 
 //creates a Bootstrap list group with movie property watched = true.
+function displayOtherList(toggle, e) {
+    displayGrid = true;
+    switch (toggle) {
+        case 'watched':
+            currentDisplay = toggle;
+            watchedList(e);
+            break;
+        case 'to-watch':
+            currentDisplay = toggle;
+            toWatch(e);
+            break;
+        case 'watchlist':
+            currentDisplay = toggle;
+            watchList(e);
+            break;
+        default:
+            break;
+    }
+}
+
 function watchedList(e) {
+    let toggle = e.currentTarget.id;
+    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+        displayOtherList(toggle, e)
+        return;
+    }
+    currentDisplay = toggle;
     clearLists();
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
@@ -389,14 +419,19 @@ function watchedList(e) {
     if (document.innerWidth < 786) {
         toggleCarousel(displayCarousel);
     } else {
-            toggleGrid(e);
+        toggleGrid(e.currentTarget);
     }
 }
 
 //creates a Bootstrap list group with movie property watched = false.
 function toWatch(e) {
+    let toggle = e.currentTarget.id;
+    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+        displayOtherList(toggle, e)
+        return;
+    }
+    currentDisplay = toggle;
     clearLists();
-    toggleCarousel(displayCarousel);
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
     for (let movie of storedData) {
@@ -412,13 +447,18 @@ function toWatch(e) {
     if (document.innerWidth < 786) {
         toggleCarousel(displayCarousel);
     } else {
-            toggleGrid(e);
+        toggleGrid(e.currentTarget);
     }
 }
 // creates a Bootstrap list group with movie property inWatchList = true.
 function watchList(e) {
+    let toggle = e.currentTarget.id;
+    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+        displayOtherList(toggle, e)
+        return;
+    }
+    currentDisplay = toggle;
     clearLists();
-    toggleCarousel(displayCarousel);
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
     for (let movie of storedData) {
@@ -434,20 +474,19 @@ function watchList(e) {
     if (document.innerWidth < 786) {
         toggleCarousel(displayCarousel);
     } else {
-            toggleGrid(e);
+        toggleGrid(e.currentTarget);
     }
 }
 
 //toggles grid visibility
-function toggleGrid(e) {
+function toggleGrid(target) {
     if (displayGrid) {
         grid.style.display = 'none';
         displayGrid = false;
-        e.target.style.backgroundColor = "teal";
     } else {
         grid.style.display = 'block';
         displayGrid = true;
-        e.target.style.backgroundColor = "rgb(180, 27, 78)";
+        currentDisplay = '';
         clearLists();
     }
 }
