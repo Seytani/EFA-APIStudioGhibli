@@ -72,7 +72,8 @@ let imdbId = {
     whenmarniewasthere: "tt3398268",
 }
 
-//Events
+/*** Events ***/
+
 catalog.addEventListener('click', display);
 //lists buttons
 watchedListButton.addEventListener('click', watchedList);
@@ -125,12 +126,13 @@ function display(ghibli) {
 
 }
 
+/**** Desktop stuff ****/
 
 //Display bigger screens
 function displayBig(ghibli) {
     generateGrid(storedData);
 }
-
+//generates the grid and call generateGridElement to append element
 function generateGrid(movies) {
     for (let r = 0; r <= 4; r++) {
         let row = document.createElement('div');
@@ -149,7 +151,7 @@ function generateGrid(movies) {
         }
     }
 }
-
+//generates the content for each grid element
 function generateGridElement(movie, index) {
     let container = document.createElement('div');
     container.setAttribute('id', 'grid-element');
@@ -219,6 +221,92 @@ function generateButtons(index) {
 
     return buttons;
 }
+
+//add content to modal desktop
+function displayModalDesktop(e) {
+    if (modal.firstChild) {
+        modal.removeChild(modal.firstChild);
+    }
+
+    let imageUrl = '';
+    let trailerUrl = '';
+    let container = document.createElement('div');
+    let movieTitle = document.createElement('h3');
+    let releaseDateHeader = document.createElement('h4');
+    let directorHeader = document.createElement('h4');
+    let ratingHeader = document.createElement('h4');
+    let descriptionHeader = document.createElement('h4');
+    let imagesHeader = document.createElement('h4');
+    let trailerHeader = document.createElement('h4');
+    let releaseDate = document.createElement('p');
+    let director = document.createElement('p');
+    let rating = document.createElement('p');
+    let description = document.createElement('p');
+
+    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId + "/Short";
+    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId;
+    movieTitle.innerHTML = storedData[e.currentTarget.dataset.index].title;
+    movieTitle.setAttribute('class', 'text-center');
+    movieTitle.style.paddingBottom = '1em';
+    releaseDateHeader.innerHTML = "Release Date";
+    directorHeader.innerHTML = "Director";
+    ratingHeader.innerHTML = "Rating";
+    descriptionHeader.innerHTML = "Description";
+    imagesHeader.innerHTML = "Additional Images";
+    trailerHeader.innerHTML = "Trailer";
+    releaseDate.innerHTML = storedData[e.currentTarget.dataset.index].release_date;
+    director.innerHTML = storedData[e.currentTarget.dataset.index].director;
+    rating.innerHTML = storedData[e.currentTarget.dataset.index].rt_score;
+    description.innerHTML = storedData[e.currentTarget.dataset.index].description;
+
+    fetchStuff(imageUrl, trailerUrl);
+
+    async function fetchStuff(imagesUrl, trailerUrl) {
+        let resImg = await fetch(imageUrl);
+        let resTrailer = await fetch(trailerUrl);
+        let jsonImg = await resImg.json();
+        let jsonTrailer = await resTrailer.json();
+        container.appendChild(movieTitle);
+        container.appendChild(releaseDateHeader);
+        container.appendChild(releaseDate);
+        container.appendChild(directorHeader);
+        container.appendChild(director);
+        container.appendChild(ratingHeader);
+        container.appendChild(rating);
+        container.appendChild(descriptionHeader);
+        container.appendChild(description);
+        container.appendChild(imagesHeader);
+        container.appendChild(createCarousel(jsonImg));
+        container.appendChild(trailerHeader);
+        container.appendChild(createVideo(jsonTrailer));
+        modal.appendChild(container);
+    }
+
+
+}
+
+//creates a Bootstrap list group with movie property watched = true.
+function displayOtherList(toggle, e) {
+    displayGrid = true;
+    switch (toggle) {
+        case 'watched':
+            currentDisplay = toggle;
+            watchedList(e);
+            break;
+        case 'to-watch':
+            currentDisplay = toggle;
+            toWatch(e);
+            break;
+        case 'watchlist':
+            currentDisplay = toggle;
+            watchList(e);
+            break;
+        default:
+            break;
+    }
+}
+
+/**** Mobile stuff ****/
 
 //Display to Mobile
 function displayMobile(ghibli) {
@@ -312,90 +400,86 @@ function displayModal() {
 
 }
 
-//add content to modal desktop
-function displayModalDesktop(e) {
-    if (modal.firstChild) {
-        modal.removeChild(modal.firstChild);
+//Makes sure the buttons in mobile display the correct toggles
+function updateButtons(movie) {
+    if (!storedData[currentMovie].watched) {
+        watchedButton.style.backgroundColor = "#7b4b94";
+        watchedButton.innerHTML = '<i class="far fa-eye"></i>';
+    } else {
+        watchedButton.style.backgroundColor = "#7d82b8";
+        watchedButton.innerHTML = '<i class="far fa-eye-slash"></i>';
     }
 
-    let imageUrl = '';
-    let trailerUrl = '';
-    let container = document.createElement('div');
-    let movieTitle = document.createElement('h3');
-    let releaseDateHeader = document.createElement('h4');
-    let directorHeader = document.createElement('h4');
-    let ratingHeader = document.createElement('h4');
-    let descriptionHeader = document.createElement('h4');
-    let imagesHeader = document.createElement('h4');
-    let trailerHeader = document.createElement('h4');
-    let releaseDate = document.createElement('p');
-    let director = document.createElement('p');
-    let rating = document.createElement('p');
-    let description = document.createElement('p');
-
-    imageUrl = imdbUrl + "Images/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId + "/Short";
-    trailerUrl = imdbUrl + "Trailer/" + imdbKey + "/" + storedData[e.currentTarget.dataset.index].imdbId;
-    movieTitle.innerHTML = storedData[e.currentTarget.dataset.index].title;
-    movieTitle.setAttribute('class', 'text-center');
-    movieTitle.style.paddingBottom = '1em';
-    releaseDateHeader.innerHTML = "Release Date";
-    directorHeader.innerHTML = "Director";
-    ratingHeader.innerHTML = "Rating";
-    descriptionHeader.innerHTML = "Description";
-    imagesHeader.innerHTML = "Additional Images";
-    trailerHeader.innerHTML = "Trailer";
-    releaseDate.innerHTML = storedData[e.currentTarget.dataset.index].release_date;
-    director.innerHTML = storedData[e.currentTarget.dataset.index].director;
-    rating.innerHTML = storedData[e.currentTarget.dataset.index].rt_score;
-    description.innerHTML = storedData[e.currentTarget.dataset.index].description;
-
-    fetchStuff(imageUrl, trailerUrl);
-
-    async function fetchStuff(imagesUrl, trailerUrl) {
-        let resImg = await fetch(imageUrl);
-        let resTrailer = await fetch(trailerUrl);
-        let jsonImg = await resImg.json();
-        let jsonTrailer = await resTrailer.json();
-        container.appendChild(movieTitle);
-        container.appendChild(releaseDateHeader);
-        container.appendChild(releaseDate);
-        container.appendChild(directorHeader);
-        container.appendChild(director);
-        container.appendChild(ratingHeader);
-        container.appendChild(rating);
-        container.appendChild(descriptionHeader);
-        container.appendChild(description);
-        container.appendChild(imagesHeader);
-        container.appendChild(createCarousel(jsonImg));
-        container.appendChild(trailerHeader);
-        container.appendChild(createVideo(jsonTrailer));
-        modal.appendChild(container);
-    }
-
-
-}
-
-//creates a Bootstrap list group with movie property watched = true.
-function displayOtherList(toggle, e) {
-    displayGrid = true;
-    switch (toggle) {
-        case 'watched':
-            currentDisplay = toggle;
-            watchedList(e);
-            break;
-        case 'to-watch':
-            currentDisplay = toggle;
-            toWatch(e);
-            break;
-        case 'watchlist':
-            currentDisplay = toggle;
-            watchList(e);
-            break;
-        default:
-            break;
+    if (!storedData[currentMovie].inWatchList) {
+        inWatchListButton.style.backgroundColor = "#D6F7A3";
+        inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
+    } else {
+        inWatchListButton.style.backgroundColor = "#bd2f55";
+        inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
     }
 }
 
+//Sets current object watched boolean. Toggles button.
+function watchedToggle(e) {
+    if (window.innerWidth < 786) {
+        if (storedData[currentMovie].watched) {
+            e.currentTarget.style.backgroundColor = "#7b4b94";
+            storedData[currentMovie].watched = false;
+            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            e.currentTarget.style.backgroundColor = "#7d82b8";
+            storedData[currentMovie].watched = true;
+            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
+    } else {
+        if (storedData[e.currentTarget.dataset.index].watched) {
+            e.currentTarget.style.backgroundColor = "#7b4b94";
+            storedData[e.currentTarget.dataset.index].watched = false;
+            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            e.currentTarget.style.backgroundColor = "#7d82b8";
+            storedData[e.currentTarget.dataset.index].watched = true;
+            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
+    }
+}
+
+//Sets current object in watch list boolean. Toggles button.
+function inWatchListToggle(e) {
+    if (window.innerWidth < 786) {
+        if (storedData[currentMovie].inWatchList) {
+            inWatchListButton.style.backgroundColor = "#D6F7A3";
+            storedData[currentMovie].inWatchList = false;
+            inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            inWatchListButton.style.backgroundColor = "#bd2f55";
+            storedData[currentMovie].inWatchList = true;
+            inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
+    } else {
+        if (storedData[e.currentTarget.dataset.index].inWatchList) {
+            e.currentTarget.style.backgroundColor = "#D6F7A3";
+            storedData[e.currentTarget.dataset.index].inWatchList = false;
+            e.currentTarget.innerHTML = '<i class="fas fa-plus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        } else {
+            e.currentTarget.style.backgroundColor = "#bd2f55";
+            storedData[e.currentTarget.dataset.index].inWatchList = true;
+            e.currentTarget.innerHTML = '<i class="fas fa-minus"></i>';
+            myStorage.setItem('ghibli', JSON.stringify(storedData));
+        }
+    }
+}
+
+/**** Main buttons for desktop/mobile ****/
+
+//Creates a list with the movies that are watched = true, toggles the button to show and hide the list.
 function watchedList(e) {
     let toggle = e.currentTarget.id;
     if (currentDisplay.length > 0 && currentDisplay !== toggle) {
@@ -423,7 +507,7 @@ function watchedList(e) {
     }
 }
 
-//creates a Bootstrap list group with movie property watched = false.
+//creates a Bootstrap list group with movie property watched = false. Toggles the list.
 function toWatch(e) {
     let toggle = e.currentTarget.id;
     if (currentDisplay.length > 0 && currentDisplay !== toggle) {
@@ -450,6 +534,7 @@ function toWatch(e) {
         toggleGrid(e.currentTarget);
     }
 }
+
 // creates a Bootstrap list group with movie property inWatchList = true.
 function watchList(e) {
     let toggle = e.currentTarget.id;
@@ -477,6 +562,8 @@ function watchList(e) {
         toggleGrid(e.currentTarget);
     }
 }
+
+/*** Utilities ***/
 
 //toggles grid visibility
 function toggleGrid(target) {
@@ -585,7 +672,7 @@ function createCarousel(result) {
     return carousel;
 }
 
-//
+//creates an iframe with results from API, handkes error if there is no trailer.
 function createVideo(result) {
     if (result.errorMessage.length > 0) {
         let errorMsg = document.createElement('div');
@@ -608,85 +695,9 @@ function toggleCarousel(shouldDisplay) {
     }
 }
 
+//removes the first child of a list emelent
 function clearLists() {
     if (lists.firstChild) {
         lists.removeChild(lists.firstChild);
-    }
-}
-
-//Makes sure the buttons display the correct toggles
-function updateButtons(movie) {
-    if (!storedData[currentMovie].watched) {
-        watchedButton.style.backgroundColor = "#7b4b94";
-        watchedButton.innerHTML = '<i class="far fa-eye"></i>';
-    } else {
-        watchedButton.style.backgroundColor = "#7d82b8";
-        watchedButton.innerHTML = '<i class="far fa-eye-slash"></i>';
-    }
-
-    if (!storedData[currentMovie].inWatchList) {
-        inWatchListButton.style.backgroundColor = "#D6F7A3";
-        inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
-    } else {
-        inWatchListButton.style.backgroundColor = "#bd2f55";
-        inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
-    }
-}
-
-//Sets current object watched boolean. Toggles button.
-function watchedToggle(e) {
-    if (window.innerWidth < 786) {
-        if (storedData[currentMovie].watched) {
-            e.currentTarget.style.backgroundColor = "#7b4b94";
-            storedData[currentMovie].watched = false;
-            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        } else {
-            e.currentTarget.style.backgroundColor = "#7d82b8";
-            storedData[currentMovie].watched = true;
-            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        }
-    } else {
-        if (storedData[e.currentTarget.dataset.index].watched) {
-            e.currentTarget.style.backgroundColor = "#7b4b94";
-            storedData[e.currentTarget.dataset.index].watched = false;
-            e.currentTarget.innerHTML = '<i class="far fa-eye"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        } else {
-            e.currentTarget.style.backgroundColor = "#7d82b8";
-            storedData[e.currentTarget.dataset.index].watched = true;
-            e.currentTarget.innerHTML = '<i class="far fa-eye-slash"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        }
-    }
-}
-
-//Sets current object in watch list boolean. Toggles button.
-function inWatchListToggle(e) {
-    if (window.innerWidth < 786) {
-        if (storedData[currentMovie].inWatchList) {
-            inWatchListButton.style.backgroundColor = "#D6F7A3";
-            storedData[currentMovie].inWatchList = false;
-            inWatchListButton.innerHTML = '<i class="fas fa-plus"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        } else {
-            inWatchListButton.style.backgroundColor = "#bd2f55";
-            storedData[currentMovie].inWatchList = true;
-            inWatchListButton.innerHTML = '<i class="fas fa-minus"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        }
-    } else {
-        if (storedData[e.currentTarget.dataset.index].inWatchList) {
-            e.currentTarget.style.backgroundColor = "#D6F7A3";
-            storedData[e.currentTarget.dataset.index].inWatchList = false;
-            e.currentTarget.innerHTML = '<i class="fas fa-plus"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        } else {
-            e.currentTarget.style.backgroundColor = "#bd2f55";
-            storedData[e.currentTarget.dataset.index].inWatchList = true;
-            e.currentTarget.innerHTML = '<i class="fas fa-minus"></i>';
-            myStorage.setItem('ghibli', JSON.stringify(storedData));
-        }
     }
 }
