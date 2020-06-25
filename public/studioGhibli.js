@@ -1,7 +1,7 @@
 //Variables
 const ghibliUrl = 'https://ghibliapi.herokuapp.com/films/';
 const imdbUrl = 'https://imdb-api.com/en/API/';
-const imdbKey = 'k_h1Rm5U5D';
+const imdbKey = 'k_PK104sOs';
 const myStorage = window.localStorage;
 let storedData;
 let displayCarousel = true;
@@ -262,10 +262,19 @@ function displayModalDesktop(e) {
     fetchStuff(imageUrl, trailerUrl);
 
     async function fetchStuff(imagesUrl, trailerUrl) {
+        let spinner = document.createElement('div');
+        spinner.setAttribute('class', 'spinner-border text-danger');
+        spinner.setAttribute('role', 'status');
+        let spinnerSpan = document.createElement('span');
+        spinnerSpan.setAttribute('class', 'sr-only');
+        spinnerSpan.setAttribute('role', 'status');
+        spinner.appendChild(spinnerSpan);
+        modal.appendChild(spinner);
         let resImg = await fetch(imageUrl);
         let resTrailer = await fetch(trailerUrl);
         let jsonImg = await resImg.json();
         let jsonTrailer = await resTrailer.json();
+        spinner.style.display = 'none';
         container.appendChild(movieTitle);
         container.appendChild(releaseDateHeader);
         container.appendChild(releaseDate);
