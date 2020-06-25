@@ -85,11 +85,11 @@ inWatchListButton.addEventListener('click', inWatchListToggle);
 
 //Events fired by bootstrap
 $('#ghibliCarousel').on('slide.bs.carousel', function (target) { //carousel
-    currentMovie = target.to; 
+    currentMovie = target.to;
     updateButtons(currentMovie);
-}) 
+})
 $('#ghibliModal').on('shown.bs.modal', function () { //modal
-    if (window.innerWidth < 786) {
+    if (window.innerWidth < 768) {
         displayModal();
     }
 })
@@ -118,7 +118,7 @@ function processData(data) {
 
 //Display to specific screen size on window load
 function display(ghibli) {
-    if (window.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         displayMobile(ghibli);
     } else {
         displayBig(ghibli);
@@ -162,7 +162,7 @@ function generateGridElement(movie, index) {
     movieElements.setAttribute('class', 'd-flex flex-column align-items-center');
     let img = document.createElement('img');
     img.setAttribute('class', 'w-100')
-    
+
     title.innerHTML = movie.title;
     img.src = getImage(reformatTitle(movie.title));
 
@@ -181,8 +181,8 @@ function generateButtons(index) {
     let watchedButton = document.createElement('button');
     let addToWatchlistButton = document.createElement('button');
     let infoButton = document.createElement('button');
-    
-    if(!storedData[index].watched) {
+
+    if (!storedData[index].watched) {
         watchedButton.innerHTML = '<i class="far fa-eye"></i>';
         watchedButton.style.backgroundColor = "#7b4b94";
     } else {
@@ -274,7 +274,7 @@ function displayModalDesktop(e) {
         let resTrailer = await fetch(trailerUrl);
         let jsonImg = await resImg.json();
         let jsonTrailer = await resTrailer.json();
-        spinner.style.display = 'none';
+        modal.removeChild(modal.firstChild);//remove spinner
         container.appendChild(movieTitle);
         container.appendChild(releaseDateHeader);
         container.appendChild(releaseDate);
@@ -290,8 +290,6 @@ function displayModalDesktop(e) {
         container.appendChild(createVideo(jsonTrailer));
         modal.appendChild(container);
     }
-
-
 }
 
 //creates a Bootstrap list group with movie property watched = true.
@@ -430,7 +428,7 @@ function updateButtons(movie) {
 
 //Sets current object watched boolean. Toggles button.
 function watchedToggle(e) {
-    if (window.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         if (storedData[currentMovie].watched) {
             e.currentTarget.style.backgroundColor = "#7b4b94";
             storedData[currentMovie].watched = false;
@@ -459,7 +457,7 @@ function watchedToggle(e) {
 
 //Sets current object in watch list boolean. Toggles button.
 function inWatchListToggle(e) {
-    if (window.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         if (storedData[currentMovie].inWatchList) {
             inWatchListButton.style.backgroundColor = "#D6F7A3";
             storedData[currentMovie].inWatchList = false;
@@ -490,12 +488,14 @@ function inWatchListToggle(e) {
 
 //Creates a list with the movies that are watched = true, toggles the button to show and hide the list.
 function watchedList(e) {
-    let toggle = e.currentTarget.id;
-    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
-        displayOtherList(toggle, e)
-        return;
+    if (window.innerWidth > 768) {
+        let toggle = e.currentTarget.id;
+        if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+            displayOtherList(toggle, e)
+            return;
+        }
+        currentDisplay = toggle;
     }
-    currentDisplay = toggle;
     clearLists();
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
@@ -509,7 +509,7 @@ function watchedList(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
-    if (document.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         toggleCarousel(displayCarousel);
     } else {
         toggleGrid(e.currentTarget);
@@ -518,12 +518,14 @@ function watchedList(e) {
 
 //creates a Bootstrap list group with movie property watched = false. Toggles the list.
 function toWatch(e) {
-    let toggle = e.currentTarget.id;
-    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
-        displayOtherList(toggle, e)
-        return;
+    if (window.innerWidth > 768) {
+        let toggle = e.currentTarget.id;
+        if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+            displayOtherList(toggle, e)
+            return;
+        }
+        currentDisplay = toggle;
     }
-    currentDisplay = toggle;
     clearLists();
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
@@ -537,7 +539,7 @@ function toWatch(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
-    if (document.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         toggleCarousel(displayCarousel);
     } else {
         toggleGrid(e.currentTarget);
@@ -546,12 +548,15 @@ function toWatch(e) {
 
 // creates a Bootstrap list group with movie property inWatchList = true.
 function watchList(e) {
-    let toggle = e.currentTarget.id;
-    if (currentDisplay.length > 0 && currentDisplay !== toggle) {
-        displayOtherList(toggle, e)
-        return;
+    if (window.innerWidth > 768) {
+
+        let toggle = e.currentTarget.id;
+        if (currentDisplay.length > 0 && currentDisplay !== toggle) {
+            displayOtherList(toggle, e)
+            return;
+        }
+        currentDisplay = toggle;
     }
-    currentDisplay = toggle;
     clearLists();
     let list = document.createElement('div');
     list.setAttribute('class', 'list-group w-100');
@@ -565,7 +570,7 @@ function watchList(e) {
     }
     lists.appendChild(list);
     lists.style.display = "flex";
-    if (document.innerWidth < 786) {
+    if (window.innerWidth <= 768) {
         toggleCarousel(displayCarousel);
     } else {
         toggleGrid(e.currentTarget);
